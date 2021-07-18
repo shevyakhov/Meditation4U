@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Meditation4U</string>
+    <string name="SignIn">Sign in</string>
+    <string name="hintEmail">Email</string>
+    <string name="hintPassword">Пароль</string>
+    <string name="registerText">Register</string>
+    <string name="greettingStart">Привет</string>
+    <string name="greettingEnd">Это приложение для медитации</string>
+    <string name="toLoginBtn">Войти в аккаунт</string>
+    <string name="RegistrationText">Регистрация</string>
+    <string name="doRegistration">Зарегистрировать</string>
+    <string name="existingAccount">Уже есть аккаунт? Войдите</string>
+</resources>

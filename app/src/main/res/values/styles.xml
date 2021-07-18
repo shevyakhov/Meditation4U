@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="mainText">
+        <item name="android:textSize">30sp</item>
+        <item name="font">@font/alegreya</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="textAllCaps">false</item>
+    </style>
+    <style name="secondaryText">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="textAllCaps">false</item>
+        <item name="font">@font/yanuc</item>
+
+    </style>
+    <style name="mainBtn">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="textAllCaps">false</item>
+        <item name="font">@font/noto</item>
+
+    </style>
+</resources>
