@@ -45,6 +45,8 @@
             android:layout_marginTop="100dp"
             android:background="@drawable/btn_shape"
             android:text="@string/toLoginBtn"
+
+
             />
         <TextView
             android:id="@+id/toRegistrationMain"
@@ -55,6 +57,7 @@
             android:layout_marginEnd="50dp"
             style="@style/secondaryText"
             android:layout_marginTop="15dp"
+
             />
         <ImageView
 
