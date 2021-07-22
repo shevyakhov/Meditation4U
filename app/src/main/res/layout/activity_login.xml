@@ -11,7 +11,6 @@
         android:orientation="vertical"
         android:background="@color/background"
         tools:ignore="MissingConstraints">
-
         <ImageView
             android:layout_height="50dp"
             android:layout_width="50dp"
@@ -31,7 +30,7 @@
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
 
-            android:text="@string/SignIn"></TextView>
+            android:text="@string/SignIn" />
         <EditText
             android:background="@color/background"
             android:layout_width="match_parent"

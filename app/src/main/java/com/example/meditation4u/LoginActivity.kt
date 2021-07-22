@@ -1,13 +1,13 @@
 package com.example.meditation4u
 
+import android.annotation.SuppressLint
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Message
 import android.util.Log
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.example.meditation4u.UserApi.UserApi
-import com.google.gson.Gson
-import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_login.*
@@ -24,26 +24,41 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+        @SuppressLint("HandlerLeak")
+        val h = object : Handler() {
+           override fun handleMessage(msg: Message) {
+               val data: String? = msg.obj as String?
+               if (data != null) {
+                   Log.e("Stuff", data)
+                   signInText.text = data
+               }else
+                   Log.e("Stuff", "no data")
+            }
+        }
         toRegistration.setOnClickListener {
             intent = Intent(this, RegistrationActivity::class.java)
-            /*intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP*/
             startActivity(intent)
             finish()
         }
         signInBtn.setOnClickListener {
 
             configureRetrofit()
+
             compositeDisposable.add(userApi.getPing()
                     .subscribeOn(Schedulers.io())
                     .subscribe(
                             {
+                                val t = Thread {
 
-                                Log.e("Stuff", it.someData)
-                               /* signInText.text = it.someData*/
+                                    val msg: Message = h.obtainMessage()
+                                    msg.obj = it.someData
+                                    h.sendMessage(msg)
+                                    /*Log.e("Stuff", it.someData)*/
+                                }
+                                t.start()
 
                             },
                             {
-
                             }
                     ))
 

@@ -10,4 +10,6 @@
     <string name="RegistrationText">Регистрация</string>
     <string name="doRegistration">Зарегистрировать</string>
     <string name="existingAccount">Уже есть аккаунт? Войдите</string>
+    <string name="greetingProfile">С возвращением </string>
+    <string name="howAreYouProfile">Каким ты себя ощущаешь сегодня?</string>
 </resources>
