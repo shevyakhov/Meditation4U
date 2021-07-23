@@ -25,6 +25,7 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
+
     private fun startingAnimation() {
         greetStart.animate().alpha(0.0f).setDuration(0)
         greetEnd.animate().alpha(0.0f).setDuration(0)

@@ -26,23 +26,19 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
         @SuppressLint("HandlerLeak")
         val h = object : Handler() {
-           override fun handleMessage(msg: Message) {
-               val data: String? = msg.obj as String?
-               if (data != null) {
-                   Log.e("Stuff", data)
-                   signInText.text = data
-               }else
-                   Log.e("Stuff", "no data")
+            override fun handleMessage(msg: Message) {
+                val data: String? = msg.obj as String?
+                if (data != null) {
+                    Log.e("Stuff", data)
+                    signInText.text = data
+                } else
+                    Log.e("Stuff", "no data")
             }
         }
-        toRegistration.setOnClickListener {
-            intent = Intent(this, RegistrationActivity::class.java)
-            startActivity(intent)
-            finish()
-        }
+
         signInBtn.setOnClickListener {
 
-            configureRetrofit()
+            /*TODO configureRetrofit()
 
             compositeDisposable.add(userApi.getPing()
                     .subscribeOn(Schedulers.io())
@@ -53,31 +49,37 @@ class LoginActivity : AppCompatActivity() {
                                     val msg: Message = h.obtainMessage()
                                     msg.obj = it.someData
                                     h.sendMessage(msg)
-                                    /*Log.e("Stuff", it.someData)*/
+                                    *//*Log.e("Stuff", it.someData)*//*
                                 }
                                 t.start()
 
                             },
                             {
                             }
-                    ))
-
-
+                    ))*/
+            intent = Intent(this, ProfileActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+        toRegistration.setOnClickListener {
+            intent = Intent(this, RegistrationActivity::class.java)
+            startActivity(intent)
+            finish()
         }
     }
 
-   private fun configureRetrofit(){
+    private fun configureRetrofit() {
         val httpLoggingInterceptor = HttpLoggingInterceptor()
-       httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
-       val okHttpClient = OkHttpClient.Builder()
-               .addInterceptor(httpLoggingInterceptor)
-               .build()
+        httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+        val okHttpClient = OkHttpClient.Builder()
+            .addInterceptor(httpLoggingInterceptor)
+            .build()
         val retrofit = Retrofit.Builder()
-                .baseUrl("http://mskko2021.mad.hakta.pro/api/")
-                .client(okHttpClient)
-                .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .build()
-       userApi = retrofit.create(UserApi::class.java)
+            .baseUrl("http://mskko2021.mad.hakta.pro/api/")
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .build()
+        userApi = retrofit.create(UserApi::class.java)
     }
 }
