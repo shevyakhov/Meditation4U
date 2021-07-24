@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RegistrationActivity">
+    tools:context=".activities.RegistrationActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -33,36 +33,40 @@
 
             >
         </TextView>
+
         <EditText
-            android:background="@color/background"
+            android:id="@+id/registerEmail"
+            style="@style/secondaryText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableBottom="@drawable/white_line"
             android:layout_marginStart="35dp"
-            android:layout_marginEnd="35dp"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp"
             android:layout_marginTop="50dp"
+            android:layout_marginEnd="35dp"
+            android:background="@color/background"
+            android:drawableBottom="@drawable/white_line"
             android:drawablePadding="10dp"
             android:hint="@string/hintEmail"
-            android:textColorHint="@color/white"
-            style="@style/secondaryText"
-            />
-        <EditText
-            android:background="@color/background"
-            android:drawableBottom="@drawable/white_line"
-            android:layout_width="match_parent"
+            android:inputType="textEmailAddress"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
+            android:textColorHint="@color/white" />
+
+        <EditText
+            android:id="@+id/registerPassword"
+            style="@style/secondaryText"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="35dp"
-            android:layout_marginEnd="35dp"
-            android:drawablePadding="10dp"
             android:layout_marginTop="10dp"
-            android:textColorHint="@color/white"
+            android:layout_marginEnd="35dp"
+            android:background="@color/background"
+            android:drawableBottom="@drawable/white_line"
+            android:drawablePadding="10dp"
             android:hint="@string/hintPassword"
-            style="@style/secondaryText"
-            />
+            android:inputType="textPassword"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:textColorHint="@color/white" />
         <Button
             android:id="@+id/doRegistrationBtn"
             android:layout_width="320dp"

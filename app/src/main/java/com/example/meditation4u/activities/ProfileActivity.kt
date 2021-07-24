@@ -1,16 +1,22 @@
-package com.example.meditation4u
+package com.example.meditation4u.activities
 
+import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.os.Message
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.meditation4u.R
 import com.example.meditation4u.RecyclerViewClass.FeelingsAdapter
+import com.example.meditation4u.UserApi.Feelings
 import com.example.meditation4u.UserApi.UserApi
 import com.example.meditation4u.databinding.ActivityLoginBinding
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_profile.*
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -25,10 +31,45 @@ class ProfileActivity : AppCompatActivity() {
     private val adapter = FeelingsAdapter()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(R.layout.activity_profile)
-        onLogin()
+
+        @SuppressLint("HandlerLeak")
+        val h = object : Handler() {
+            override fun handleMessage(msg: Message) {
+                val data = msg.obj as List<Feelings>
+                for (feel in data.indices)
+                    adapter.addFeeling(data[feel])
+            }
+        }
+
         bindingInit()
+
+        configureRetrofit()
+        compositeDisposable.add(userApi.getFeelings()
+            .subscribeOn(Schedulers.io())
+            .subscribe(
+                {
+                    val t = Thread {
+                        val msg: Message = h.obtainMessage()
+                        msg.obj = it.someData
+                        h.sendMessage(msg)
+                        Log.e("tag", it.someData.toString())
+
+                    }
+                    t.start()
+
+                },
+                {
+                }
+            ))
+
+        profileHamburger.setOnClickListener{
+            intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
     }
 
     private fun bindingInit() {
@@ -37,23 +78,10 @@ class ProfileActivity : AppCompatActivity() {
                 LinearLayoutManager(this@ProfileActivity, RecyclerView.HORIZONTAL, false)
             feelingsList.adapter = adapter
 
+
         }
     }
 
-    private fun onLogin() {
-        configureRetrofit()
-
-        compositeDisposable.add(userApi.getFeelings()
-            .subscribeOn(Schedulers.io())
-            .subscribe(
-                {
-                    Log.e("tag", it.someData.toString())
-
-                },
-                {
-                }
-            ))
-    }
 
     private fun configureRetrofit() {
         val httpLoggingInterceptor = HttpLoggingInterceptor()
@@ -69,4 +97,5 @@ class ProfileActivity : AppCompatActivity() {
             .build()
         userApi = retrofit.create(UserApi::class.java)
     }
+
 }

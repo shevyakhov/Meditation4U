@@ -1,7 +1,8 @@
 package com.example.meditation4u.UserApi
 
 import io.reactivex.Single
-import retrofit2.http.GET
+import retrofit2.Call
+import retrofit2.http.*
 
 interface UserApi {
     @GET("./ping")
@@ -12,5 +13,16 @@ interface UserApi {
 
     @GET("./feelings")
     fun getFeelings(): Single<FeelingsResponse>
+
+
+    @POST("./user")
+    fun createUser(
+        @Body userRequest: UserRequest
+    ): Call<CreateUserResponse>
+
+    @POST("./user/login")
+    fun getLogin(
+        @Body userRequest:UserRequest
+    ): Call<LoginResponse>
 
 }
