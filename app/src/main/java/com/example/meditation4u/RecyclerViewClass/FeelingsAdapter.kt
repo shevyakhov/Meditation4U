@@ -4,7 +4,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.meditation4u.R
+import com.example.meditation4u.UserApi.Feelings
 import com.example.meditation4u.databinding.FeelingItemBinding
 
 class FeelingsAdapter : RecyclerView.Adapter<FeelingsAdapter.FeelingsHolder>() {
@@ -12,9 +14,14 @@ class FeelingsAdapter : RecyclerView.Adapter<FeelingsAdapter.FeelingsHolder>() {
 
     class FeelingsHolder(v: View) : RecyclerView.ViewHolder(v) {
         val binding = FeelingItemBinding.bind(v)
+        val context = v.context
         fun bind(feeling: Feelings) = with(binding) {
-            feelName.text = feeling.feelText
-            feelBackground.setImageResource(feeling.icon)
+            feelName.text = feeling.feelingsTitle
+            Glide
+                .with(context)
+                .load(feeling.feelingsImage)
+                .into(feelBackground)
+
         }
     }
 

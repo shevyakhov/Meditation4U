@@ -24,17 +24,6 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        @SuppressLint("HandlerLeak")
-        val h = object : Handler() {
-            override fun handleMessage(msg: Message) {
-                val data: String? = msg.obj as String?
-                if (data != null) {
-                    Log.e("Stuff", data)
-                    signInText.text = data
-                } else
-                    Log.e("Stuff", "no data")
-            }
-        }
 
         signInBtn.setOnClickListener {
 

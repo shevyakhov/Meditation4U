@@ -4,10 +4,10 @@ import com.google.gson.annotations.SerializedName
 
 data class FeelingsResponse(
     @SerializedName("success") val isSuccessful: String,
-    @SerializedName("data") val someData: List<FeelingsList>
+    @SerializedName("data") val someData: List<Feelings>
 )
 
-data class FeelingsList(
+data class Feelings(
     @SerializedName("id")
     val feelingsId: Int,
     @SerializedName("title")
