@@ -9,9 +9,11 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.meditation4u.R
 import com.example.meditation4u.RecyclerViewClass.FeelingsAdapter
 import com.example.meditation4u.UserApi.Feelings
+import com.example.meditation4u.UserApi.LoginResponse
 import com.example.meditation4u.UserApi.UserApi
 import com.example.meditation4u.databinding.ActivityLoginBinding
 import io.reactivex.disposables.CompositeDisposable
@@ -31,10 +33,11 @@ class ProfileActivity : AppCompatActivity() {
     private val adapter = FeelingsAdapter()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(R.layout.activity_profile)
 
+        val user = initUser(intent)
+        setProfile(user)
         @SuppressLint("HandlerLeak")
         val h = object : Handler() {
             override fun handleMessage(msg: Message) {
@@ -47,6 +50,7 @@ class ProfileActivity : AppCompatActivity() {
         bindingInit()
 
         configureRetrofit()
+
         compositeDisposable.add(userApi.getFeelings()
             .subscribeOn(Schedulers.io())
             .subscribe(
@@ -65,7 +69,7 @@ class ProfileActivity : AppCompatActivity() {
                 }
             ))
 
-        profileHamburger.setOnClickListener{
+        profileHamburger.setOnClickListener {
             intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
             finish()
@@ -98,4 +102,19 @@ class ProfileActivity : AppCompatActivity() {
         userApi = retrofit.create(UserApi::class.java)
     }
 
+    private fun initUser(i: Intent): LoginResponse {
+        val id = i.getStringExtra("id")
+        val email = i.getStringExtra("email")
+        val nickName = i.getStringExtra("nickName")
+        val avatar = i.getStringExtra("avatar")
+        val token = i.getStringExtra("token")
+        return LoginResponse(id!!, email!!, nickName!!, avatar!!, token!!)
+    }
+
+    private fun setProfile(user:LoginResponse) {
+        Glide
+            .with(this)
+            .load(user.avatar)
+            .into(profilePicture)
+    }
 }

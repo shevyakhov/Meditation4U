@@ -1,9 +1,15 @@
 package com.example.meditation4u.activities
 
+import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.example.meditation4u.R
 import com.example.meditation4u.UserApi.LoginResponse
 import com.example.meditation4u.UserApi.UserApi
@@ -23,21 +29,30 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class LoginActivity : AppCompatActivity() {
     lateinit var userApi: UserApi
+    var userLogged: LoginResponse? = null
     private val compositeDisposable = CompositeDisposable()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
         configureRetrofit()
-
         signInBtn.setOnClickListener {
+            onLogin()
+            android.os.Handler().postDelayed({
+                if (userLogged != null) {
+                    vibratePhone()
+                    intent = Intent(this, ProfileActivity::class.java)
+                    intent.putExtra("id", userLogged!!.id)
+                    intent.putExtra("email", userLogged!!.email )
+                    intent.putExtra("nickName", userLogged!!.nickName)
+                    intent.putExtra("avatar", userLogged!!.avatar)
+                    intent.putExtra("token", userLogged!!.token)
+                    startActivity(intent)
+                    finish()
+                } else
+                   Toast.makeText(this,"Невозможно войти",Toast.LENGTH_SHORT).show()
 
-           val client = onLogin()
-            if (client !== null ) {
-                intent = Intent(this, ProfileActivity::class.java)
-                startActivity(intent)
-            }else
-                Log.e("check","null client")
+            }, 500)
         }
         toRegistration.setOnClickListener {
             intent = Intent(this, RegistrationActivity::class.java)
@@ -61,12 +76,11 @@ class LoginActivity : AppCompatActivity() {
         userApi = retrofit.create(UserApi::class.java)
     }
 
-    private fun onLogin(): LoginResponse? {
+    private fun onLogin() {
         val user = UserRequest(
             signInEmail.text.toString().trim(),
             signInPassword.text.toString().trim()
         )
-        var userLogged: LoginResponse? = null
         userApi.getLogin(user)
             .enqueue(object : Callback<LoginResponse> {
                 override fun onResponse(
@@ -75,8 +89,7 @@ class LoginActivity : AppCompatActivity() {
                 ) {
                     Log.e("response", response.toString())
                     userLogged = response.body()
-                    /*TODO NULL EXCEPTION*/
-                    Log.e("!!!!!!",userLogged.toString())
+                    Log.e("!!!!!!", userLogged.toString())
                 }
 
                 override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
@@ -84,6 +97,21 @@ class LoginActivity : AppCompatActivity() {
                 }
 
             })
-        return userLogged
+    }
+
+    private fun vibratePhone() {
+        val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        if (vibrator.hasVibrator()) { // Vibrator availability checking
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                vibrator.vibrate(
+                    VibrationEffect.createOneShot(
+                        100,
+                        5
+                    )
+                ) // New vibrate method for API Level 26 or higher
+            } else {
+                vibrator.vibrate(100) // Vibrate method for below API Level 26
+            }
+        }
     }
 }
