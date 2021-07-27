@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.meditation4u.R
 import com.example.meditation4u.RecyclerViewClass.FeelingsAdapter
+import com.example.meditation4u.RecyclerViewClass.MenuAdapter
+import com.example.meditation4u.RecyclerViewClass.menuArray
 import com.example.meditation4u.UserApi.Feelings
 import com.example.meditation4u.UserApi.LoginResponse
 import com.example.meditation4u.UserApi.UserApi
@@ -29,11 +31,14 @@ import retrofit2.converter.gson.GsonConverterFactory
 class ProfileActivity : AppCompatActivity() {
     lateinit var userApi: UserApi
     private val compositeDisposable = CompositeDisposable()
-    lateinit var binding: ActivityLoginBinding
-    private val adapter = FeelingsAdapter()
+    lateinit var bindingFeelings: ActivityLoginBinding
+    lateinit var bindingMenu: ActivityLoginBinding
+    private val feelingsAdapter = FeelingsAdapter()
+    private val menuAdapter = MenuAdapter()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityLoginBinding.inflate(layoutInflater)
+        bindingFeelings = ActivityLoginBinding.inflate(layoutInflater)
+        bindingMenu = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(R.layout.activity_profile)
 
         val user = initUser(intent)
@@ -43,9 +48,12 @@ class ProfileActivity : AppCompatActivity() {
             override fun handleMessage(msg: Message) {
                 val data = msg.obj as List<Feelings>
                 for (feel in data.indices)
-                    adapter.addFeeling(data[feel])
+                    feelingsAdapter.addFeeling(data[feel])
+
             }
         }
+
+        setMenuRecycler()
 
         bindingInit()
 
@@ -74,15 +82,21 @@ class ProfileActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+
     }
 
     private fun bindingInit() {
-        binding.apply {
+        bindingFeelings.apply {
             feelingsList.layoutManager =
                 LinearLayoutManager(this@ProfileActivity, RecyclerView.HORIZONTAL, false)
-            feelingsList.adapter = adapter
+            feelingsList.adapter = feelingsAdapter
+        }
+        bindingMenu.apply {
+            menuList.layoutManager =
+                LinearLayoutManager(this@ProfileActivity, RecyclerView.VERTICAL, false)
+            menuList.adapter = menuAdapter
 
-
+            Log.e("1", "done")
         }
     }
 
@@ -111,10 +125,16 @@ class ProfileActivity : AppCompatActivity() {
         return LoginResponse(id!!, email!!, nickName!!, avatar!!, token!!)
     }
 
-    private fun setProfile(user:LoginResponse) {
+    private fun setProfile(user: LoginResponse) {
         Glide
             .with(this)
             .load(user.avatar)
             .into(profilePicture)
+    }
+
+    private fun setMenuRecycler() {
+        for (menuItem in menuArray.indices)
+            menuAdapter.addItem(menuArray[menuItem])
+
     }
 }

@@ -57,9 +57,10 @@
         android:text="@string/greetingProfile"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/profileLogo"
-        app:layout_constraintVertical_bias="0.096" />
+        app:layout_constraintVertical_bias="0.059" />
 
     <TextView
         android:id="@+id/profileTextBot"
@@ -89,41 +90,40 @@
         tools:itemCount="1" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/meditationList"
+        android:id="@+id/menuList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/musicBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/profileTextBot"
+        app:layout_constraintTop_toBottomOf="@+id/feelingsList"
         app:layout_constraintVertical_bias="0.229"
+        android:layout_marginBottom="28dp"
         tools:itemCount="1" />
 
     <ImageView
         android:id="@+id/homeBtnLogo"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="28dp"
         android:src="@drawable/logo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/profilePicture"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/profileHamburger"
-        app:layout_constraintTop_toBottomOf="@+id/meditationList"
-        app:layout_constraintVertical_bias="0.963" />
+        app:layout_constraintTop_toBottomOf="@+id/menuList"
+        app:layout_constraintVertical_bias="0.964" />
 
     <ImageView
         android:id="@+id/musicBtn"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_marginBottom="28dp"
+        android:layout_marginBottom="29dp"
         android:src="@drawable/sounds"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/profileBtn"
-        app:layout_constraintStart_toEndOf="@+id/homeBtnLogo"
-        app:layout_constraintTop_toBottomOf="@+id/meditationList"
-        app:layout_constraintVertical_bias="0.997" />
+        app:layout_constraintStart_toEndOf="@+id/homeBtnLogo" />
 
     <ImageView
         android:id="@+id/profileBtn"
@@ -134,6 +134,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/musicBtn"
-        app:layout_constraintTop_toBottomOf="@+id/meditationList"
+        app:layout_constraintTop_toBottomOf="@+id/menuList"
         app:layout_constraintVertical_bias="1.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>

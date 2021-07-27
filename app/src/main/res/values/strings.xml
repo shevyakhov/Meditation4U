@@ -12,4 +12,5 @@
     <string name="existingAccount">Уже есть аккаунт? Войдите</string>
     <string name="greetingProfile">С возвращением </string>
     <string name="howAreYouProfile">Каким ты себя ощущаешь сегодня?</string>
+    <string name="learnMore">подробнее</string>
 </resources>
