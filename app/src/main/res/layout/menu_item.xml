@@ -63,6 +63,7 @@
             android:textSize="15sp" />
 
         <Button
+            android:id="@+id/menuBtn"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"

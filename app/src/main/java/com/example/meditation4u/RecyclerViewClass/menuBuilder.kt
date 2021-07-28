@@ -7,4 +7,6 @@ private val first = MenuList("Цитаты", "Здесь будут подбад
 
 private val second = MenuList("Тестовый блок", "Описание", R.drawable.heart_profile)
 
-val menuArray = arrayListOf<MenuList>(first , second)
+private val third = MenuList("Дерево", "Тут вы увидите деревья", R.drawable.common_google_signin_btn_icon_dark)
+
+val menuArray = arrayListOf<MenuList>(first , second, third)

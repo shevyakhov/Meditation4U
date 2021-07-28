@@ -1,5 +1,6 @@
 package com.example.meditation4u.RecyclerViewClass
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,12 +17,24 @@ class FeelingsAdapter : RecyclerView.Adapter<FeelingsAdapter.FeelingsHolder>() {
         val binding = FeelingItemBinding.bind(v)
         val context = v.context
         fun bind(feeling: Feelings) = with(binding) {
+            var count = 0
+            val grey = Color.parseColor("#c2c2c2")
+            val white = Color.parseColor("#ffffff")
+
             feelName.text = feeling.feelingsTitle
             Glide
                 .with(context)
                 .load(feeling.feelingsImage)
                 .into(feelBackground)
-
+            cardView.setOnClickListener {
+                if (count % 2 == 0) {
+                    cardView.setCardBackgroundColor(grey)
+                }
+                else {
+                    cardView.setCardBackgroundColor(white)
+                }
+                count++
+            }
         }
     }
 
