@@ -7,7 +7,7 @@ import android.os.Bundle
 import com.example.meditation4u.R
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -30,10 +30,6 @@ class MainActivity : AppCompatActivity() {
         greetEnd.animate().alpha(0.0f).setDuration(0)
         loginBtn.animate().alpha(0.0f).setDuration(0)
         toRegistrationMain.animate().alpha(0.0f).setDuration(0)
-        ObjectAnimator.ofFloat(icon, "translationY", -1800f).apply {
-            duration = 3000
-            start()
-        }
 
         android.os.Handler().postDelayed({
             greetStart.animate().alpha(1.0f).setDuration(1000)
@@ -41,9 +37,7 @@ class MainActivity : AppCompatActivity() {
             loginBtn.animate().alpha(1.0f).setDuration(1000)
             toRegistrationMain.animate().alpha(1.0f).setDuration(1000)
 
-        }, 2000)
+        }, 500)
 
-/*TODO 1)Login btn
-*      2)Register btn*/
     }
 }
