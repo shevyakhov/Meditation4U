@@ -16,16 +16,16 @@ class SplashScreen : AppCompatActivity() {
         startingAnimation()
     }
     private fun startingAnimation() {
-        ObjectAnimator.ofFloat(splashIcon, "translationY", -1790f).apply {
+        ObjectAnimator.ofFloat(splashIcon, "translationY", -1788f).apply {
             duration = 2000
             start()
         }
         android.os.Handler().postDelayed({
             intent = Intent(this, HomeActivity::class.java)
             startActivity(intent)
-            CustomIntent.customType(this,"fadein-to-fadeout")
+            this.overridePendingTransition(0, 0);
             finish()
-        }, 3000)
+        }, 2500)
 
     }
 }
