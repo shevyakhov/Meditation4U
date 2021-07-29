@@ -9,15 +9,12 @@ import android.os.Vibrator
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import com.example.meditation4u.R
 import com.example.meditation4u.UserApi.LoginResponse
 import com.example.meditation4u.UserApi.UserApi
 import com.example.meditation4u.UserApi.UserRequest
-import com.google.android.gms.common.api.Api
-import io.reactivex.disposables.CompositeDisposable
+import com.example.meditation4u.constants.*
 import kotlinx.android.synthetic.main.activity_login.*
-import kotlinx.android.synthetic.main.activity_registration.*
 import maes.tech.intentanim.CustomIntent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -28,10 +25,10 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
+@Suppress("DEPRECATION")
 class LoginActivity : AppCompatActivity() {
     lateinit var userApi: UserApi
     var userLogged: LoginResponse? = null
-    private val compositeDisposable = CompositeDisposable()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -42,12 +39,14 @@ class LoginActivity : AppCompatActivity() {
             android.os.Handler().postDelayed({
                 if (userLogged != null) {
                     vibratePhone()
+                    saveData(userLogged!!)
                     intent = Intent(this, ProfileActivity::class.java)
-                    intent.putExtra("id", userLogged!!.id)
-                    intent.putExtra("email", userLogged!!.email)
-                    intent.putExtra("nickName", userLogged!!.nickName)
-                    intent.putExtra("avatar", userLogged!!.avatar)
-                    intent.putExtra("token", userLogged!!.token)
+                    intent = Intent(this, ProfileActivity::class.java)
+                    intent.putExtra(ID, userLogged!!.id)
+                    intent.putExtra(EMAIL, userLogged!!.email)
+                    intent.putExtra(NICKNAME, userLogged!!.nickName)
+                    intent.putExtra(AVATAR, userLogged!!.avatar)
+                    intent.putExtra(TOKEN, userLogged!!.token)
                     startActivity(intent)
                     CustomIntent.customType(this, "fadein-to-fadeout")
                     finish()
@@ -116,4 +115,17 @@ class LoginActivity : AppCompatActivity() {
             }
         }
     }
+
+     private fun saveData(user: LoginResponse) {
+        val sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putString(ID, user.id)
+        editor.putString(EMAIL, user.email)
+        editor.putString(NICKNAME, user.nickName)
+        editor.putString(AVATAR, user.avatar)
+        editor.putString(TOKEN, user.token)
+        editor.apply()
+
+    }
+
 }

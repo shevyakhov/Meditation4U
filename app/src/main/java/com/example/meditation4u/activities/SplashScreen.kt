@@ -5,27 +5,62 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.meditation4u.R
-import kotlinx.android.synthetic.main.activity_main.*
+import com.example.meditation4u.constants.*
 import kotlinx.android.synthetic.main.activity_splash_screen.*
 import maes.tech.intentanim.CustomIntent
 
+@Suppress("DEPRECATION")
 class SplashScreen : AppCompatActivity() {
+    private lateinit var id: String
+    private lateinit var email: String
+    private lateinit var nickName: String
+    private lateinit var avatar: String
+    private lateinit var token: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
+
+        getSavedData()
+
         startingAnimation()
     }
+
     private fun startingAnimation() {
         ObjectAnimator.ofFloat(splashIcon, "translationY", -1788f).apply {
             duration = 2000
             start()
         }
         android.os.Handler().postDelayed({
-            intent = Intent(this, HomeActivity::class.java)
-            startActivity(intent)
-            this.overridePendingTransition(0, 0);
-            finish()
+            if (email == "" || id == "") {
+                intent = Intent(this, HomeActivity::class.java)
+                startActivity(intent)
+                this.overridePendingTransition(0, 0)
+                finish()
+            } else {
+
+                intent = Intent(this, ProfileActivity::class.java)
+                intent.putExtra(ID, id)
+                intent.putExtra(EMAIL, email)
+                intent.putExtra(NICKNAME, nickName)
+                intent.putExtra(AVATAR, avatar)
+                intent.putExtra(TOKEN, token)
+                startActivity(intent)
+                CustomIntent.customType(this, "fadein-to-fadeout")
+                finish()
+            }
+
+
         }, 2500)
 
+    }
+
+    private fun getSavedData() {
+        val sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE)
+
+        id = sharedPreferences.getString(ID, "").toString()
+        email = sharedPreferences.getString(EMAIL, "").toString()
+        nickName = sharedPreferences.getString(NICKNAME, "").toString()
+        avatar = sharedPreferences.getString(AVATAR, "").toString()
+        token = sharedPreferences.getString(TOKEN, "").toString()
     }
 }

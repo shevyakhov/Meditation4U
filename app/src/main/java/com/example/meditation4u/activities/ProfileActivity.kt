@@ -18,6 +18,7 @@ import com.example.meditation4u.RecyclerViewClass.menuArray
 import com.example.meditation4u.UserApi.Feelings
 import com.example.meditation4u.UserApi.LoginResponse
 import com.example.meditation4u.UserApi.UserApi
+import com.example.meditation4u.constants.*
 import com.example.meditation4u.databinding.ActivityLoginBinding
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -37,13 +38,14 @@ class ProfileActivity : AppCompatActivity() {
     lateinit var bindingMenu: ActivityLoginBinding
     private val feelingsAdapter = FeelingsAdapter()
     private val menuAdapter = MenuAdapter()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bindingFeelings = ActivityLoginBinding.inflate(layoutInflater)
         bindingMenu = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(R.layout.activity_profile)
 
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+        window.decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)
 
         val user = initUser(intent)
         setProfile(user)
@@ -82,9 +84,10 @@ class ProfileActivity : AppCompatActivity() {
             ))
 
         profileHamburger.setOnClickListener {
-            intent = Intent(this, LoginActivity::class.java)
+            saveData(LoginResponse(EMPTY, EMPTY, EMPTY, EMPTY, EMPTY))
+            intent = Intent(this, HomeActivity::class.java)
             startActivity(intent)
-            CustomIntent.customType(this,"fadein-to-fadeout")
+            CustomIntent.customType(this, "fadein-to-fadeout")
             finish()
         }
 
@@ -101,7 +104,6 @@ class ProfileActivity : AppCompatActivity() {
                 LinearLayoutManager(this@ProfileActivity, RecyclerView.VERTICAL, false)
             menuList.adapter = menuAdapter
 
-            Log.e("1", "done")
         }
     }
 
@@ -122,11 +124,11 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun initUser(i: Intent): LoginResponse {
-        val id = i.getStringExtra("id")
-        val email = i.getStringExtra("email")
-        val nickName = i.getStringExtra("nickName")
-        val avatar = i.getStringExtra("avatar")
-        val token = i.getStringExtra("token")
+        val id = i.getStringExtra(ID)
+        val email = i.getStringExtra(EMAIL)
+        val nickName = i.getStringExtra(NICKNAME)
+        val avatar = i.getStringExtra(AVATAR)
+        val token = i.getStringExtra(TOKEN)
         return LoginResponse(id!!, email!!, nickName!!, avatar!!, token!!)
     }
 
@@ -142,6 +144,7 @@ class ProfileActivity : AppCompatActivity() {
             menuAdapter.addItem(menuArray[menuItem])
 
     }
+
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         if (hasFocus) {
@@ -154,4 +157,14 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
+    private fun saveData(user: LoginResponse) {
+        val sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putString(ID, user.id)
+        editor.putString(EMAIL, user.email)
+        editor.putString(NICKNAME, user.nickName)
+        editor.putString(AVATAR, user.avatar)
+        editor.putString(TOKEN, user.token)
+        editor.apply()
+    }
 }
