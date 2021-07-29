@@ -23,6 +23,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_profile.*
+import maes.tech.intentanim.CustomIntent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -83,6 +84,7 @@ class ProfileActivity : AppCompatActivity() {
         profileHamburger.setOnClickListener {
             intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
+            CustomIntent.customType(this,"fadein-to-fadeout")
             finish()
         }
 

@@ -18,6 +18,7 @@ import com.google.android.gms.common.api.Api
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_registration.*
+import maes.tech.intentanim.CustomIntent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
@@ -43,21 +44,22 @@ class LoginActivity : AppCompatActivity() {
                     vibratePhone()
                     intent = Intent(this, ProfileActivity::class.java)
                     intent.putExtra("id", userLogged!!.id)
-                    intent.putExtra("email", userLogged!!.email )
+                    intent.putExtra("email", userLogged!!.email)
                     intent.putExtra("nickName", userLogged!!.nickName)
                     intent.putExtra("avatar", userLogged!!.avatar)
                     intent.putExtra("token", userLogged!!.token)
                     startActivity(intent)
+                    CustomIntent.customType(this, "fadein-to-fadeout")
                     finish()
                 } else
-                   Toast.makeText(this,"Невозможно войти",Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Невозможно войти", Toast.LENGTH_SHORT).show()
 
             }, 500)
         }
         toRegistration.setOnClickListener {
             intent = Intent(this, RegistrationActivity::class.java)
             startActivity(intent)
-
+            CustomIntent.customType(this, "fadein-to-fadeout")
         }
     }
 

@@ -12,6 +12,7 @@ import com.example.meditation4u.UserApi.UserRequest
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_registration.*
+import maes.tech.intentanim.CustomIntent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
@@ -30,6 +31,7 @@ class RegistrationActivity : AppCompatActivity() {
         toLoginBtn.setOnClickListener {
             intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
+            CustomIntent.customType(this, "fadein-to-fadeout")
 
         }
         doRegistrationBtn.setOnClickListener {

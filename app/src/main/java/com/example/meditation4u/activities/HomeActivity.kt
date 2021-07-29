@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.meditation4u.R
 import kotlinx.android.synthetic.main.activity_main.*
+import maes.tech.intentanim.CustomIntent
 
 class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -15,11 +16,13 @@ class HomeActivity : AppCompatActivity() {
         loginBtn.setOnClickListener {
             intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
+            CustomIntent.customType(this,"fadein-to-fadeout")
             finish()
         }
         toRegistrationMain.setOnClickListener {
             intent = Intent(this, RegistrationActivity::class.java)
             startActivity(intent)
+            CustomIntent.customType(this,"fadein-to-fadeout")
             finish()
         }
 
