@@ -14,9 +14,9 @@ import com.bumptech.glide.Glide
 import com.example.meditation4u.R
 import com.example.meditation4u.RecyclerViewClass.FeelingsAdapter
 import com.example.meditation4u.RecyclerViewClass.MenuAdapter
-import com.example.meditation4u.RecyclerViewClass.menuArray
 import com.example.meditation4u.UserApi.Feelings
 import com.example.meditation4u.UserApi.LoginResponse
+import com.example.meditation4u.UserApi.QuotesList
 import com.example.meditation4u.UserApi.UserApi
 import com.example.meditation4u.constants.*
 import com.example.meditation4u.databinding.ActivityLoginBinding
@@ -31,6 +31,7 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
+@Suppress("DEPRECATION")
 class ProfileActivity : AppCompatActivity() {
     lateinit var userApi: UserApi
     private val compositeDisposable = CompositeDisposable()
@@ -41,47 +42,37 @@ class ProfileActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_profile)
+        window.decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)
+
         bindingFeelings = ActivityLoginBinding.inflate(layoutInflater)
         bindingMenu = ActivityLoginBinding.inflate(layoutInflater)
-        setContentView(R.layout.activity_profile)
-
-        window.decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)
 
         val user = initUser(intent)
         setProfile(user)
+
         @SuppressLint("HandlerLeak")
-        val h = object : Handler() {
+        val handler = object : Handler() {
             override fun handleMessage(msg: Message) {
-                val data = msg.obj as List<Feelings>
-                for (feel in data.indices)
-                    feelingsAdapter.addFeeling(data[feel])
+                val data = msg.obj as List<*>
+                when(msg.what)
+                {
+                   0 ->  for (feel in data.indices)
+                       feelingsAdapter.addFeeling(data[feel] as Feelings)
+                   1->  for (quote in data.indices)
+                       menuAdapter.addItem(data[quote] as QuotesList)
+                }
+
+
 
             }
         }
 
-        setMenuRecycler()
 
         bindingInit()
-
         configureRetrofit()
-
-        compositeDisposable.add(userApi.getFeelings()
-            .subscribeOn(Schedulers.io())
-            .subscribe(
-                {
-                    val t = Thread {
-                        val msg: Message = h.obtainMessage()
-                        msg.obj = it.someData
-                        h.sendMessage(msg)
-                        Log.e("tag", it.someData.toString())
-
-                    }
-                    t.start()
-
-                },
-                {
-                }
-            ))
+        getFeelings(handler)
+        getQuotes(handler)
 
         profileHamburger.setOnClickListener {
             saveData(LoginResponse(EMPTY, EMPTY, EMPTY, EMPTY, EMPTY))
@@ -123,6 +114,47 @@ class ProfileActivity : AppCompatActivity() {
         userApi = retrofit.create(UserApi::class.java)
     }
 
+    private fun getFeelings(h: Handler) {
+        compositeDisposable.add(userApi.getFeelings()
+            .subscribeOn(Schedulers.io())
+            .subscribe(
+                {
+                    val t = Thread {
+                        val msg: Message = h.obtainMessage()
+                        msg.obj = it.someData
+                        msg.what = 0
+                        h.sendMessage(msg)
+                        Log.e("tag", it.someData.toString())
+
+                    }
+                    t.start()
+
+                },
+                {
+                }
+            ))
+    }
+    private fun getQuotes(h: Handler) {
+        compositeDisposable.add(userApi.getQuotes()
+            .subscribeOn(Schedulers.io())
+            .subscribe(
+                {
+                    val t = Thread {
+                        val msg: Message = h.obtainMessage()
+                        msg.obj = it.someData
+                        msg.what = 1
+                        h.sendMessage(msg)
+                        Log.e("tag", it.someData.toString())
+
+                    }
+                    t.start()
+
+                },
+                {
+                }
+            ))
+    }
+
     private fun initUser(i: Intent): LoginResponse {
         val id = i.getStringExtra(ID)
         val email = i.getStringExtra(EMAIL)
@@ -139,11 +171,6 @@ class ProfileActivity : AppCompatActivity() {
             .into(profilePicture)
     }
 
-    private fun setMenuRecycler() {
-        for (menuItem in menuArray.indices)
-            menuAdapter.addItem(menuArray[menuItem])
-
-    }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)

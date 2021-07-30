@@ -5,29 +5,31 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.meditation4u.R
-import com.example.meditation4u.UserApi.MenuList
-import com.example.meditation4u.activities.ProfileActivity
+import com.example.meditation4u.UserApi.QuotesList
 import com.example.meditation4u.databinding.MenuItemBinding
 
 
 class MenuAdapter : RecyclerView.Adapter<MenuAdapter.MenuHolder>() {
-    val menuList = ArrayList<MenuList>()
+    val menuList = ArrayList<QuotesList>()
 
     class MenuHolder(v: View) : RecyclerView.ViewHolder(v) {
         val binding = MenuItemBinding.bind(v)
         val context = v.context
         lateinit var btn:Button
-        fun bind(menu: MenuList) = with(binding) {
-            menuHeader.text = menu.header
-            menuDescription.text = menu.description
-            menuBackground.setImageResource(menu.picture)
+        fun bind(menu: QuotesList) = with(binding) {
+            menuHeader.text = menu.quotesTitle
+            menuDescription.text = menu.quotesDescription
+            Glide
+                .with(context)
+                .load(menu.quotesImage)
+                .into(menuBackground)
             btn = menuBtn
             btn.setOnClickListener {
-                Toast.makeText(context, menu.header, Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, menu.quotesDescription, Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -48,8 +50,8 @@ class MenuAdapter : RecyclerView.Adapter<MenuAdapter.MenuHolder>() {
         return menuList.size
     }
 
-    fun addItem(m: MenuList) {
-        menuList.add(m)
+    fun addItem(q: QuotesList) {
+        menuList.add(q)
         notifyDataSetChanged()
     }
 }
