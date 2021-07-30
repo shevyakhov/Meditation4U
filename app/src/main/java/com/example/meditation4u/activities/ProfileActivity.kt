@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.meditation4u.R
 import com.example.meditation4u.RecyclerViewClass.FeelingsAdapter
 import com.example.meditation4u.RecyclerViewClass.MenuAdapter
@@ -33,17 +34,17 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 @Suppress("DEPRECATION")
 class ProfileActivity : AppCompatActivity() {
-    lateinit var userApi: UserApi
+    private lateinit var userApi: UserApi
     private val compositeDisposable = CompositeDisposable()
-    lateinit var bindingFeelings: ActivityLoginBinding
-    lateinit var bindingMenu: ActivityLoginBinding
+    private lateinit var bindingFeelings: ActivityLoginBinding
+    private lateinit var bindingMenu: ActivityLoginBinding
     private val feelingsAdapter = FeelingsAdapter()
     private val menuAdapter = MenuAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
-        window.decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)
+        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
 
         bindingFeelings = ActivityLoginBinding.inflate(layoutInflater)
         bindingMenu = ActivityLoginBinding.inflate(layoutInflater)
@@ -55,14 +56,12 @@ class ProfileActivity : AppCompatActivity() {
         val handler = object : Handler() {
             override fun handleMessage(msg: Message) {
                 val data = msg.obj as List<*>
-                when(msg.what)
-                {
-                   0 ->  for (feel in data.indices)
-                       feelingsAdapter.addFeeling(data[feel] as Feelings)
-                   1->  for (quote in data.indices)
-                       menuAdapter.addItem(data[quote] as QuotesList)
+                when (msg.what) {
+                    0 -> for (feel in data.indices)
+                        feelingsAdapter.addFeeling(data[feel] as Feelings)
+                    1 -> for (quote in data.indices)
+                        menuAdapter.addItem(data[quote] as QuotesList)
                 }
-
 
 
             }
@@ -75,13 +74,18 @@ class ProfileActivity : AppCompatActivity() {
         getQuotes(handler)
 
         profileHamburger.setOnClickListener {
-            saveData(LoginResponse(EMPTY, EMPTY, EMPTY, EMPTY, EMPTY))
-            intent = Intent(this, HomeActivity::class.java)
+
+        }
+        profileBtn.setOnClickListener {
+            intent = Intent(this, UserActivity::class.java)
+            intent.putExtra(ID, user.id)
+            intent.putExtra(EMAIL, user.email)
+            intent.putExtra(NICKNAME, user.nickName)
+            intent.putExtra(AVATAR, user.avatar)
+            intent.putExtra(TOKEN, user.token)
             startActivity(intent)
             CustomIntent.customType(this, "fadein-to-fadeout")
-            finish()
         }
-
     }
 
     private fun bindingInit() {
@@ -97,7 +101,6 @@ class ProfileActivity : AppCompatActivity() {
 
         }
     }
-
 
     private fun configureRetrofit() {
         val httpLoggingInterceptor = HttpLoggingInterceptor()
@@ -134,6 +137,7 @@ class ProfileActivity : AppCompatActivity() {
                 }
             ))
     }
+
     private fun getQuotes(h: Handler) {
         compositeDisposable.add(userApi.getQuotes()
             .subscribeOn(Schedulers.io())
@@ -168,9 +172,9 @@ class ProfileActivity : AppCompatActivity() {
         Glide
             .with(this)
             .load(user.avatar)
+            .apply(RequestOptions.circleCropTransform())
             .into(profilePicture)
     }
-
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
@@ -184,14 +188,5 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
-    private fun saveData(user: LoginResponse) {
-        val sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        editor.putString(ID, user.id)
-        editor.putString(EMAIL, user.email)
-        editor.putString(NICKNAME, user.nickName)
-        editor.putString(AVATAR, user.avatar)
-        editor.putString(TOKEN, user.token)
-        editor.apply()
-    }
+
 }

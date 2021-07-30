@@ -13,6 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Meditation4U"
         android:usesCleartextTraffic="true">
+        <activity android:name=".activities.UserActivity"></activity>
         <activity
             android:name=".activities.SplashScreen"
             android:screenOrientation="portrait">
