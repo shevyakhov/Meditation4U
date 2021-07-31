@@ -45,9 +45,6 @@ class FeelingsAdapter : RecyclerView.Adapter<FeelingsAdapter.FeelingsHolder>() {
 
     override fun onBindViewHolder(holder: FeelingsHolder, position: Int) {
         holder.bind(feelingList[position])
-        holder.itemView.setOnClickListener {
-            /*TODO change background on click*/
-        }
     }
     override fun getItemCount(): Int {
         return feelingList.size
