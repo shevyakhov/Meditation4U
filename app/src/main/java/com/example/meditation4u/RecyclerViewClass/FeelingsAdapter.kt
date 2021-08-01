@@ -29,8 +29,7 @@ class FeelingsAdapter : RecyclerView.Adapter<FeelingsAdapter.FeelingsHolder>() {
             cardView.setOnClickListener {
                 if (count % 2 == 0) {
                     cardView.setCardBackgroundColor(grey)
-                }
-                else {
+                } else {
                     cardView.setCardBackgroundColor(white)
                 }
                 count++
@@ -46,6 +45,7 @@ class FeelingsAdapter : RecyclerView.Adapter<FeelingsAdapter.FeelingsHolder>() {
     override fun onBindViewHolder(holder: FeelingsHolder, position: Int) {
         holder.bind(feelingList[position])
     }
+
     override fun getItemCount(): Int {
         return feelingList.size
     }

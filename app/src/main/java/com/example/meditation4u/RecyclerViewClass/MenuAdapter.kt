@@ -19,7 +19,7 @@ class MenuAdapter : RecyclerView.Adapter<MenuAdapter.MenuHolder>() {
     class MenuHolder(v: View) : RecyclerView.ViewHolder(v) {
         val binding = MenuItemBinding.bind(v)
         val context = v.context
-        lateinit var btn:Button
+        lateinit var btn: Button
         fun bind(menu: QuotesList) = with(binding) {
             menuHeader.text = menu.quotesTitle
             menuDescription.text = menu.quotesDescription

@@ -5,10 +5,11 @@ package com.example.meditation4u.activities
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.meditation4u.R
@@ -19,9 +20,12 @@ import com.example.meditation4u.constants.*
 import com.example.meditation4u.databinding.ActivityUserBinding
 import kotlinx.android.synthetic.main.activity_user.*
 import maes.tech.intentanim.CustomIntent
+import java.text.SimpleDateFormat
+import java.util.*
 
 class UserActivity : AppCompatActivity() {
     lateinit var picBinding: ActivityUserBinding
+    var launcher: ActivityResultLauncher<Intent>? = null
     private val adapter = PictureAdapter()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +33,20 @@ class UserActivity : AppCompatActivity() {
         picBinding = ActivityUserBinding.inflate(layoutInflater)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
         setContentView(picBinding.root)
+
+        launcher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+                if (result.resultCode == RESULT_OK) {
+                    val id = result.data?.getIntExtra(PICTURE, 0)
+                    val currentTime =
+                        SimpleDateFormat("HH:mm", Locale.US).format(Calendar.getInstance().time)
+                    if (id != null) {
+
+                        adapter.addItem(PicList(id, currentTime))
+                    }
+                }
+            }
+        adapter.addLauncher(launcher)
 
         bindingInit()
 
@@ -43,16 +61,17 @@ class UserActivity : AppCompatActivity() {
         userHome.setOnClickListener {
             finish()
         }
-        test()
     }
 
     private fun bindingInit() {
         picBinding.apply {
             recyclerPictures.layoutManager =
-                GridLayoutManager(this@UserActivity,2)
+                GridLayoutManager(this@UserActivity, 2)
             recyclerPictures.adapter = adapter
         }
+        adapter.addItemFirst(PicList(R.drawable.plus, EMPTY))
     }
+
     private fun saveData(user: LoginResponse) {
         val sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE)
         val editor = sharedPreferences.edit()
@@ -97,16 +116,6 @@ class UserActivity : AppCompatActivity() {
     override fun finish() {
         super.finish()
         CustomIntent.customType(this, "fadein-to-fadeout")
-    }
-
-    fun test(){
-        for (i in 1..8) {
-            if (i == 8){
-                adapter.addItem(PicList(R.drawable.plus))
-            }
-            else
-            adapter.addItem(PicList(R.drawable.logo))
-        }
     }
 
 }
