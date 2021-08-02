@@ -24,8 +24,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class UserActivity : AppCompatActivity() {
-    lateinit var picBinding: ActivityUserBinding
-    var launcher: ActivityResultLauncher<Intent>? = null
+    private lateinit var picBinding: ActivityUserBinding
+    private var launcher: ActivityResultLauncher<Intent>? = null
     private val adapter = PictureAdapter()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +43,14 @@ class UserActivity : AppCompatActivity() {
                     if (id != null) {
 
                         adapter.addItem(PicList(id, currentTime))
+                    }
+                }
+                if (result.resultCode == RESULT_FIRST_USER) {
+                    val id = result.data?.getIntExtra(ITEM_CODE, ITEM_STAY)
+                    if (id == ITEM_DELETE) {
+                        val position = result.data?.getIntExtra(POSITION, ITEM_STAY)
+                        if (position != null)
+                            adapter.deleteItem(position)
                     }
                 }
             }

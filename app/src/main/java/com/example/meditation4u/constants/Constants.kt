@@ -8,3 +8,7 @@ const val AVATAR = "avatar"
 const val TOKEN = "token"
 const val EMPTY = ""
 const val PICTURE = "picture"
+const val ITEM_CODE = "item_code"
+const val ITEM_STAY = 1
+const val ITEM_DELETE = 0
+const val POSITION = "position"

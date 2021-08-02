@@ -1,13 +1,12 @@
 package com.example.meditation4u.activities
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import com.example.meditation4u.R
 import com.example.meditation4u.constants.PICTURE
 import kotlinx.android.synthetic.main.activity_picture_choice.*
-import kotlinx.android.synthetic.main.picture_item.view.*
+import maes.tech.intentanim.CustomIntent
 
 class PictureChoiceActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,5 +40,8 @@ class PictureChoiceActivity : AppCompatActivity() {
     }
 
 
-
+    override fun finish() {
+        super.finish()
+        CustomIntent.customType(this, "fadein-to-fadeout")
+    }
 }
