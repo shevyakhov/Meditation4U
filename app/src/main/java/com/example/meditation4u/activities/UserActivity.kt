@@ -41,16 +41,20 @@ class UserActivity : AppCompatActivity() {
                     val currentTime =
                         SimpleDateFormat("HH:mm", Locale.US).format(Calendar.getInstance().time)
                     if (id != null) {
-
                         adapter.addItem(PicList(id, currentTime))
+                        savePictureData(adapter.picList)
                     }
                 }
                 if (result.resultCode == RESULT_FIRST_USER) {
                     val id = result.data?.getIntExtra(ITEM_CODE, ITEM_STAY)
                     if (id == ITEM_DELETE) {
                         val position = result.data?.getIntExtra(POSITION, ITEM_STAY)
-                        if (position != null)
+                        if (position != null) {
+                            clearSharedPrefs(position)
                             adapter.deleteItem(position)
+                            savePictureData(adapter.picList)
+                        }
+
                     }
                 }
             }
@@ -61,6 +65,7 @@ class UserActivity : AppCompatActivity() {
         setProfile(user)
         userExit.setOnClickListener {
             saveData(LoginResponse(EMPTY, EMPTY, EMPTY, EMPTY, EMPTY))
+            savePictureData(arrayListOf())
             intent = Intent(this, HomeActivity::class.java)
             startActivity(intent)
             CustomIntent.customType(this, "fadein-to-fadeout")
@@ -107,6 +112,9 @@ class UserActivity : AppCompatActivity() {
             .apply(RequestOptions.circleCropTransform())
             .into(userPic)
         userName.text = user.nickName
+
+        getPictureData()
+
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -124,6 +132,48 @@ class UserActivity : AppCompatActivity() {
     override fun finish() {
         super.finish()
         CustomIntent.customType(this, "fadein-to-fadeout")
+    }
+
+    private fun savePictureData(list: ArrayList<PicList>) {
+        val sharedPreferences = getSharedPreferences(SHARED_IMAGES, MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        for (i in list.indices-1) {
+            editor.putString("$PICTURE_DATE $i", list[i].date)
+            editor.putInt("$PICTURE_IMAGE $i", list[i].image)
+        }
+        editor.putInt(PICTURE_LIST_SIZE, list.size-1)
+        editor.apply()
+    }
+
+    private fun getPictureData() {
+        val sharedPreferences = getSharedPreferences(SHARED_IMAGES, MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        val size = sharedPreferences.getInt(PICTURE_LIST_SIZE, 0)
+        for (i in 0 until size) {
+            val date = sharedPreferences.getString("$PICTURE_DATE $i", EMPTY)
+            val img = sharedPreferences.getInt("$PICTURE_IMAGE $i", 0)
+            if (date != null  && img != 0) {
+                val item = PicList(img, date)
+                adapter.addItem(item)
+            }
+
+        }
+
+        editor.apply()
+    }
+    private fun clearSharedPrefs(i:Int){
+        val sharedPreferences = getSharedPreferences(SHARED_IMAGES, MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        val size = adapter.picList.size-1
+        var index = i
+        for (j in i+1 until size) {
+            val date = sharedPreferences.getString("$PICTURE_DATE $j", EMPTY)
+            val img = sharedPreferences.getInt("$PICTURE_IMAGE $j", 0)
+            editor.putString("$PICTURE_DATE $index", date)
+            editor.putInt("$PICTURE_IMAGE $index", img)
+            index++
+        }
+        editor.apply()
     }
 
 }
