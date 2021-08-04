@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.meditation4u.R
+import com.example.meditation4u.constants.EMAIL
 import kotlinx.android.synthetic.main.activity_main.*
 import maes.tech.intentanim.CustomIntent
 
@@ -44,4 +45,5 @@ class HomeActivity : AppCompatActivity() {
         }, 500)
 
     }
+
 }

@@ -64,7 +64,7 @@ class UserActivity : AppCompatActivity() {
 
         setProfile(user)
         userExit.setOnClickListener {
-            saveData(LoginResponse(EMPTY, EMPTY, EMPTY, EMPTY, EMPTY))
+            saveData(LoginResponse(EMPTY, user.email, EMPTY, EMPTY, EMPTY))
             savePictureData(arrayListOf())
             intent = Intent(this, HomeActivity::class.java)
             startActivity(intent)

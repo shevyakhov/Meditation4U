@@ -35,6 +35,7 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
         configureRetrofit()
+        loadEditTextData()
         signInBtn.setOnClickListener {
             onLogin()
             android.os.Handler().postDelayed({
@@ -125,8 +126,8 @@ class LoginActivity : AppCompatActivity() {
         editor.putString(AVATAR, user.avatar)
         editor.putString(TOKEN, user.token)
         editor.apply()
-
     }
+
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
@@ -138,5 +139,9 @@ class LoginActivity : AppCompatActivity() {
                     or View.SYSTEM_UI_FLAG_FULLSCREEN
                     or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
         }
+    }
+    private fun loadEditTextData(){
+        val sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE)
+        signInEmail.text.append(sharedPreferences.getString(EMAIL,""))
     }
 }

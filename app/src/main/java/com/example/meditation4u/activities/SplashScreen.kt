@@ -32,7 +32,7 @@ class SplashScreen : AppCompatActivity() {
             start()
         }
         android.os.Handler().postDelayed({
-            if (email == "" || id == "") {
+            if (email == EMPTY || id == EMPTY) {
                 intent = Intent(this, HomeActivity::class.java)
                 startActivity(intent)
                 this.overridePendingTransition(0, 0)
