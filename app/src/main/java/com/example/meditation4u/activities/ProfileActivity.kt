@@ -73,9 +73,11 @@ class ProfileActivity : AppCompatActivity() {
         getFeelings(handler)
         getQuotes(handler)
 
-        profileHamburger.setOnClickListener {
-
-        }
+       musicBtn.setOnClickListener {
+           intent = Intent(this, MusicActivity::class.java)
+           startActivity(intent)
+           CustomIntent.customType(this, "fadein-to-fadeout")
+       }
         profileBtn.setOnClickListener {
             intent = Intent(this, UserActivity::class.java)
             intent.putExtra(ID, user.id)

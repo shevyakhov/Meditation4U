@@ -18,6 +18,7 @@ import com.example.meditation4u.UserApi.LoginResponse
 import com.example.meditation4u.UserApi.PicList
 import com.example.meditation4u.constants.*
 import com.example.meditation4u.databinding.ActivityUserBinding
+import kotlinx.android.synthetic.main.activity_profile.*
 import kotlinx.android.synthetic.main.activity_user.*
 import maes.tech.intentanim.CustomIntent
 import java.text.SimpleDateFormat
@@ -73,6 +74,12 @@ class UserActivity : AppCompatActivity() {
         }
         userHome.setOnClickListener {
             finish()
+        }
+
+        userMusic.setOnClickListener {
+            intent = Intent(this, MusicActivity::class.java)
+            startActivity(intent)
+            CustomIntent.customType(this, "fadein-to-fadeout")
         }
     }
 
