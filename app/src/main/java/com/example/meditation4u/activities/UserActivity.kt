@@ -5,6 +5,7 @@ package com.example.meditation4u.activities
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -42,6 +43,7 @@ class UserActivity : AppCompatActivity() {
                     val currentTime =
                         SimpleDateFormat("HH:mm", Locale.US).format(Calendar.getInstance().time)
                     if (id != null) {
+                        clearSharedPrefs()
                         adapter.addItem(PicList(id, currentTime))
                         savePictureData(adapter.picList)
                     }
@@ -51,7 +53,7 @@ class UserActivity : AppCompatActivity() {
                     if (id == ITEM_DELETE) {
                         val position = result.data?.getIntExtra(POSITION, ITEM_STAY)
                         if (position != null) {
-                            clearSharedPrefs(position)
+                            clearSharedPrefs()
                             adapter.deleteItem(position)
                             savePictureData(adapter.picList)
                         }
@@ -144,11 +146,11 @@ class UserActivity : AppCompatActivity() {
     private fun savePictureData(list: ArrayList<PicList>) {
         val sharedPreferences = getSharedPreferences(SHARED_IMAGES, MODE_PRIVATE)
         val editor = sharedPreferences.edit()
-        for (i in list.indices-1) {
+        for (i in 0..list.size - 2) {
             editor.putString("$PICTURE_DATE $i", list[i].date)
             editor.putInt("$PICTURE_IMAGE $i", list[i].image)
         }
-        editor.putInt(PICTURE_LIST_SIZE, list.size-1)
+        editor.putInt(PICTURE_LIST_SIZE, list.size - 2)
         editor.apply()
     }
 
@@ -156,30 +158,23 @@ class UserActivity : AppCompatActivity() {
         val sharedPreferences = getSharedPreferences(SHARED_IMAGES, MODE_PRIVATE)
         val editor = sharedPreferences.edit()
         val size = sharedPreferences.getInt(PICTURE_LIST_SIZE, 0)
-        for (i in 0 until size) {
-            val date = sharedPreferences.getString("$PICTURE_DATE $i", EMPTY)
+        for (i in 0..size) {
+            val date = sharedPreferences.getString("$PICTURE_DATE $i", null)
             val img = sharedPreferences.getInt("$PICTURE_IMAGE $i", 0)
-            if (date != null  && img != 0) {
-                val item = PicList(img, date)
-                adapter.addItem(item)
+            if (date != null && img != 0) {
+                adapter.addItem(PicList(img, date))
             }
+            else Toast.makeText(this, "null", Toast.LENGTH_SHORT).show()
 
         }
 
         editor.apply()
     }
-    private fun clearSharedPrefs(i:Int){
+
+    private fun clearSharedPrefs() {
         val sharedPreferences = getSharedPreferences(SHARED_IMAGES, MODE_PRIVATE)
         val editor = sharedPreferences.edit()
-        val size = adapter.picList.size-1
-        var index = i
-        for (j in i+1 until size) {
-            val date = sharedPreferences.getString("$PICTURE_DATE $j", EMPTY)
-            val img = sharedPreferences.getInt("$PICTURE_IMAGE $j", 0)
-            editor.putString("$PICTURE_DATE $index", date)
-            editor.putInt("$PICTURE_IMAGE $index", img)
-            index++
-        }
+        editor.clear()
         editor.apply()
     }
 
