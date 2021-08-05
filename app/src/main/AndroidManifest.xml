@@ -13,7 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Meditation4U"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activities.MusicActivity"></activity>
+        <activity
+            android:name=".activities.MusicActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.ImageActivity"
             android:screenOrientation="portrait" />

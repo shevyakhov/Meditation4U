@@ -31,9 +31,14 @@ class MusicActivity : AppCompatActivity() {
 
     private fun useSound(id: Int) {
         Toast.makeText(this, R.string.relax, Toast.LENGTH_SHORT).show()
+        createPlayer(id)
+        musicSeekBar.max = player!!.duration
+        stopPlayer()
         musicPlay.setOnClickListener {
             createPlayer(id)
+
             initSeekBar()
+
         }
         musicPause.setOnClickListener {
             pausePlayer()
@@ -63,23 +68,6 @@ class MusicActivity : AppCompatActivity() {
         })
     }
 
-    private fun initSeekBar() {
-        musicSeekBar.max = player!!.duration
-        val handler = Handler()
-        handler.postDelayed(object : Runnable {
-            override fun run() {
-                try {
-                    musicSeekBar.progress = player!!.currentPosition
-                    handler.postDelayed(this, 1000)
-                } catch (e: Exception) {
-                    musicSeekBar.progress = 0
-                }
-            }
-
-        }, 0)
-
-    }
-
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         if (hasFocus) {
@@ -104,13 +92,35 @@ class MusicActivity : AppCompatActivity() {
             player?.release()
             player = null
         }
+        musicSeekBar!!.progress = 0
     }
 
     private fun createPlayer(id: Int) {
+
         if (player == null) {
             player = MediaPlayer.create(this, id)
+            val progress = musicSeekBar!!.progress
+            player!!.seekTo(progress)
         }
+
         player?.start()
+    }
+
+    private fun initSeekBar() {
+
+        val handler = Handler()
+        handler.postDelayed(object : Runnable {
+            override fun run() {
+                try {
+                    musicSeekBar.progress = player!!.currentPosition
+                    handler.postDelayed(this, 1000)
+                } catch (e: Exception) {
+                    musicSeekBar.progress = 0
+                }
+            }
+
+        }, 0)
+
     }
 
     private fun pausePlayer() {
