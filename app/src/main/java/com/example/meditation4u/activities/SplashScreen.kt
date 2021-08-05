@@ -24,35 +24,15 @@ class SplashScreen : AppCompatActivity() {
         getSavedData()
 
         startingAnimation()
+        intentHandler()
     }
 
     private fun startingAnimation() {
-        ObjectAnimator.ofFloat(splashIcon, "translationY", -1788f).apply {
-            duration = 2000
-            start()
-        }
+        splashIcon.animate().alpha(0.0f).duration = 0
+
         android.os.Handler().postDelayed({
-            if (email == EMPTY || id == EMPTY) {
-                intent = Intent(this, HomeActivity::class.java)
-                startActivity(intent)
-                this.overridePendingTransition(0, 0)
-                finish()
-            } else {
-
-                intent = Intent(this, ProfileActivity::class.java)
-                intent.putExtra(ID, id)
-                intent.putExtra(EMAIL, email)
-                intent.putExtra(NICKNAME, nickName)
-                intent.putExtra(AVATAR, avatar)
-                intent.putExtra(TOKEN, token)
-                startActivity(intent)
-                CustomIntent.customType(this, "fadein-to-fadeout")
-                finish()
-            }
-
-
-        }, 2500)
-
+            splashIcon.animate().alpha(1.0f).duration = 1000
+        }, 500)
     }
 
     private fun getSavedData() {
@@ -75,5 +55,29 @@ class SplashScreen : AppCompatActivity() {
                     or View.SYSTEM_UI_FLAG_FULLSCREEN
                     or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
         }
+    }
+
+    private fun intentHandler() {
+        android.os.Handler().postDelayed({
+            if (email == EMPTY || id == EMPTY) {
+                intent = Intent(this, HomeActivity::class.java)
+                startActivity(intent)
+                this.overridePendingTransition(0, 0)
+                finish()
+            } else {
+
+                intent = Intent(this, ProfileActivity::class.java)
+                intent.putExtra(ID, id)
+                intent.putExtra(EMAIL, email)
+                intent.putExtra(NICKNAME, nickName)
+                intent.putExtra(AVATAR, avatar)
+                intent.putExtra(TOKEN, token)
+                startActivity(intent)
+                CustomIntent.customType(this, "fadein-to-fadeout")
+                finish()
+            }
+
+
+        }, 2000)
     }
 }
