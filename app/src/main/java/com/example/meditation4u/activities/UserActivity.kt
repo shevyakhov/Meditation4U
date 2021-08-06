@@ -83,6 +83,9 @@ class UserActivity : AppCompatActivity() {
             startActivity(intent)
             CustomIntent.customType(this, "fadein-to-fadeout")
         }
+        userHamburger.setOnClickListener {
+            Toast.makeText(this, R.string.uselessBtn, Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun bindingInit() {
@@ -164,7 +167,6 @@ class UserActivity : AppCompatActivity() {
             if (date != null && img != 0) {
                 adapter.addItem(PicList(img, date))
             }
-            else Toast.makeText(this, "null", Toast.LENGTH_SHORT).show()
 
         }
 

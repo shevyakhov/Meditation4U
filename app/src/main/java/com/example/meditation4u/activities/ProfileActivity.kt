@@ -7,6 +7,7 @@ import android.os.Handler
 import android.os.Message
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -87,6 +88,9 @@ class ProfileActivity : AppCompatActivity() {
             intent.putExtra(TOKEN, user.token)
             startActivity(intent)
             CustomIntent.customType(this, "fadein-to-fadeout")
+        }
+        profileHamburger.setOnClickListener {
+            Toast.makeText(this, R.string.uselessBtn, Toast.LENGTH_SHORT).show()
         }
     }
 
