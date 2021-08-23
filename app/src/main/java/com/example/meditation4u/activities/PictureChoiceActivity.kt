@@ -13,6 +13,11 @@ class PictureChoiceActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_picture_choice)
 
+        setListeners()
+    }
+
+    private fun setListeners() {
+        /* since gallery is immutable i did this */
         firstPic.setOnClickListener {
             val intent = Intent()
             intent.putExtra(PICTURE, R.drawable.gallery_1)
@@ -38,7 +43,6 @@ class PictureChoiceActivity : AppCompatActivity() {
             finish()
         }
     }
-
 
     override fun finish() {
         super.finish()

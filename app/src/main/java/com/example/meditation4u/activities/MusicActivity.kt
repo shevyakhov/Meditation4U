@@ -3,14 +3,13 @@
 package com.example.meditation4u.activities
 
 import android.media.MediaPlayer
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import android.view.View
 import android.widget.SeekBar
 import android.widget.Toast
-import androidx.core.view.isVisible
+import androidx.appcompat.app.AppCompatActivity
 import com.example.meditation4u.R
 import kotlinx.android.synthetic.main.activity_music.*
 import maes.tech.intentanim.CustomIntent
@@ -18,7 +17,7 @@ import maes.tech.intentanim.CustomIntent
 class MusicActivity : AppCompatActivity() {
 
     var player: MediaPlayer? = null
-    var song = mutableListOf<Int>(R.raw.relax)
+    private var song = mutableListOf(R.raw.relax)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,12 +33,17 @@ class MusicActivity : AppCompatActivity() {
         createPlayer(id)
         musicSeekBar.max = player!!.duration
         stopPlayer()
+        /* upper code is handicap for seekbar using before creating player */
+        setListeners(id)
+
+    }
+
+    private fun setListeners(id: Int) {
         musicPlay.setOnClickListener {
             createPlayer(id)
-
             initSeekBar()
-
         }
+
         musicPause.setOnClickListener {
             pausePlayer()
         }
@@ -47,6 +51,7 @@ class MusicActivity : AppCompatActivity() {
         musicStop.setOnClickListener {
             stopPlayer()
         }
+
         musicClose.setOnClickListener {
             stopPlayer()
             finish()
@@ -66,33 +71,6 @@ class MusicActivity : AppCompatActivity() {
             }
 
         })
-    }
-
-    override fun onWindowFocusChanged(hasFocus: Boolean) {
-        super.onWindowFocusChanged(hasFocus)
-        if (hasFocus) {
-            window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                    or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                    or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                    or View.SYSTEM_UI_FLAG_FULLSCREEN
-                    or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
-        }
-    }
-
-    override fun finish() {
-        super.finish()
-        CustomIntent.customType(this, "fadein-to-fadeout")
-    }
-
-    private fun stopPlayer() {
-        if (player !== null) {
-            player?.stop()
-            player?.reset()
-            player?.release()
-            player = null
-        }
-        musicSeekBar!!.progress = 0
     }
 
     private fun createPlayer(id: Int) {
@@ -128,4 +106,33 @@ class MusicActivity : AppCompatActivity() {
             player?.pause()
 
     }
+
+    private fun stopPlayer() {
+        if (player !== null) {
+            player?.stop()
+            player?.reset()
+            player?.release()
+            player = null
+        }
+        musicSeekBar!!.progress = 0
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) {
+            window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    or View.SYSTEM_UI_FLAG_FULLSCREEN
+                    or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
+        }
+    }
+
+    override fun finish() {
+        super.finish()
+        CustomIntent.customType(this, "fadein-to-fadeout")
+    }
+
+
 }

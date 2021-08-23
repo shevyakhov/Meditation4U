@@ -68,17 +68,20 @@ class ProfileActivity : AppCompatActivity() {
             }
         }
 
-
         bindingInit()
         configureRetrofit()
         getFeelings(handler)
         getQuotes(handler)
+        setListeners(user)
 
-       musicBtn.setOnClickListener {
-           intent = Intent(this, MusicActivity::class.java)
-           startActivity(intent)
-           CustomIntent.customType(this, "fadein-to-fadeout")
-       }
+    }
+
+    private fun setListeners(user: LoginResponse) {
+        musicBtn.setOnClickListener {
+            intent = Intent(this, MusicActivity::class.java)
+            startActivity(intent)
+            CustomIntent.customType(this, "fadein-to-fadeout")
+        }
         profileBtn.setOnClickListener {
             intent = Intent(this, UserActivity::class.java)
             intent.putExtra(ID, user.id)

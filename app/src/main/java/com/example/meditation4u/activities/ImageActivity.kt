@@ -13,28 +13,35 @@ import com.example.meditation4u.constants.PICTURE
 import com.example.meditation4u.constants.POSITION
 import kotlinx.android.synthetic.main.activity_image.*
 import maes.tech.intentanim.CustomIntent
+
 @Suppress("DEPRECATION")
 class ImageActivity : AppCompatActivity() {
-    private var clickCounter:Int = 0
+    private var clickCounter: Int = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_image)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
         val id = intent?.getIntExtra(PICTURE, 0)
         val position = intent?.getIntExtra(POSITION, -1)
+
         setImage(id)
 
+        setListeners(position)
+    }
+
+    private fun setListeners(position:Int?) {
         pickedImage.setOnClickListener(object : DoubleClickListener() {
             override fun onDoubleClick(v: View) {
                 if (clickCounter % 2 == 0) {
                     increaseViewSize(pickedImage)
-                }else
+                } else
                     decreaseViewSize(pickedImage)
                 clickCounter++
             }
         })
-
-
+        closeImgBtn.setOnClickListener {
+            finish()
+        }
         deleteImgBtn.setOnClickListener {
             val result = Intent()
             result.putExtra(ITEM_CODE, ITEM_DELETE)
@@ -42,11 +49,6 @@ class ImageActivity : AppCompatActivity() {
             setResult(RESULT_FIRST_USER, result)
             finish()
         }
-
-        closeImgBtn.setOnClickListener {
-            finish()
-        }
-
     }
 
     private fun setImage(id: Int?) {
@@ -58,8 +60,10 @@ class ImageActivity : AppCompatActivity() {
         super.finish()
         CustomIntent.customType(this, "fadein-to-fadeout")
     }
+
     private fun increaseViewSize(view: View) {
-        val valueAnimatorHeight = ValueAnimator.ofInt(view.measuredHeight, view.measuredHeight+400)
+        val valueAnimatorHeight =
+            ValueAnimator.ofInt(view.measuredHeight, view.measuredHeight + 400)
         valueAnimatorHeight.duration = 500L
         valueAnimatorHeight.addUpdateListener {
             val animatedValueHeight = valueAnimatorHeight.animatedValue as Int
@@ -68,7 +72,7 @@ class ImageActivity : AppCompatActivity() {
             view.layoutParams = layoutParams
         }
         valueAnimatorHeight.start()
-        val valueAnimatorWidth = ValueAnimator.ofInt(view.measuredWidth, view.measuredWidth+400)
+        val valueAnimatorWidth = ValueAnimator.ofInt(view.measuredWidth, view.measuredWidth + 400)
         valueAnimatorWidth.duration = 500L
         valueAnimatorWidth.addUpdateListener {
             val animatedValueWidth = valueAnimatorWidth.animatedValue as Int
@@ -78,8 +82,10 @@ class ImageActivity : AppCompatActivity() {
         }
         valueAnimatorWidth.start()
     }
+
     private fun decreaseViewSize(view: View) {
-        val valueAnimatorHeight = ValueAnimator.ofInt(view.measuredHeight, view.measuredHeight-400)
+        val valueAnimatorHeight =
+            ValueAnimator.ofInt(view.measuredHeight, view.measuredHeight - 400)
         valueAnimatorHeight.duration = 500L
         valueAnimatorHeight.addUpdateListener {
             val animatedValueHeight = valueAnimatorHeight.animatedValue as Int
@@ -88,7 +94,7 @@ class ImageActivity : AppCompatActivity() {
             view.layoutParams = layoutParams
         }
         valueAnimatorHeight.start()
-        val valueAnimatorWidth = ValueAnimator.ofInt(view.measuredWidth, view.measuredWidth-400)
+        val valueAnimatorWidth = ValueAnimator.ofInt(view.measuredWidth, view.measuredWidth - 400)
         valueAnimatorWidth.duration = 500L
         valueAnimatorWidth.addUpdateListener {
             val animatedValueWidth = valueAnimatorWidth.animatedValue as Int

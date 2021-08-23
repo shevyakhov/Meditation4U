@@ -21,8 +21,8 @@ class SplashScreen : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-        getSavedData()
 
+        getSavedData()
         startingAnimation()
         intentHandler()
     }
@@ -76,8 +76,6 @@ class SplashScreen : AppCompatActivity() {
                 CustomIntent.customType(this, "fadein-to-fadeout")
                 finish()
             }
-
-
         }, 2000)
     }
 }

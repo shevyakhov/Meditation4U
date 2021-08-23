@@ -34,8 +34,42 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+
         configureRetrofit()
+
         loadEditTextData()
+
+        setListeners()
+    }
+
+    private fun configureRetrofit() {
+        val httpLoggingInterceptor = HttpLoggingInterceptor()
+        httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+        val okHttpClient = OkHttpClient.Builder()
+            .addInterceptor(httpLoggingInterceptor)
+            .build()
+        val retrofit = Retrofit.Builder()
+            .baseUrl("http://mskko2021.mad.hakta.pro/api/")
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .build()
+        userApi = retrofit.create(UserApi::class.java)
+    }
+
+    private fun loadEditTextData() {
+        val sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE)
+        signInEmail.text.append(sharedPreferences.getString(EMAIL, ""))
+    }
+
+    private fun setListeners() {
+
+        toRegistration.setOnClickListener {
+            intent = Intent(this, RegistrationActivity::class.java)
+            startActivity(intent)
+            CustomIntent.customType(this, "fadein-to-fadeout")
+        }
+
         signInBtn.setOnClickListener {
             onLogin()
             android.os.Handler().postDelayed({
@@ -56,28 +90,7 @@ class LoginActivity : AppCompatActivity() {
 
             }, 500)
         }
-        toRegistration.setOnClickListener {
-            intent = Intent(this, RegistrationActivity::class.java)
-            startActivity(intent)
-            CustomIntent.customType(this, "fadein-to-fadeout")
-        }
     }
-
-    private fun configureRetrofit() {
-        val httpLoggingInterceptor = HttpLoggingInterceptor()
-        httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
-        val okHttpClient = OkHttpClient.Builder()
-            .addInterceptor(httpLoggingInterceptor)
-            .build()
-        val retrofit = Retrofit.Builder()
-            .baseUrl("http://mskko2021.mad.hakta.pro/api/")
-            .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create())
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .build()
-        userApi = retrofit.create(UserApi::class.java)
-    }
-
     private fun onLogin() {
         val user = UserRequest(
             signInEmail.text.toString().trim(),
@@ -102,6 +115,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun vibratePhone() {
+        /* vibrate if logged */
         val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         if (vibrator.hasVibrator()) { // Vibrator availability checking
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -110,9 +124,9 @@ class LoginActivity : AppCompatActivity() {
                         100,
                         5
                     )
-                ) // New vibrate method for API Level 26 or higher
+                )
             } else {
-                vibrator.vibrate(100) // Vibrate method for below API Level 26
+                vibrator.vibrate(100)
             }
         }
     }
@@ -140,8 +154,5 @@ class LoginActivity : AppCompatActivity() {
                     or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
         }
     }
-    private fun loadEditTextData(){
-        val sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE)
-        signInEmail.text.append(sharedPreferences.getString(EMAIL,""))
-    }
+
 }

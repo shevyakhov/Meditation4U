@@ -1,5 +1,6 @@
 package com.example.meditation4u.RecyclerViewClass
 
+import android.annotation.SuppressLint
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -14,12 +15,12 @@ import com.example.meditation4u.databinding.MenuItemBinding
 
 
 class MenuAdapter : RecyclerView.Adapter<MenuAdapter.MenuHolder>() {
-    val menuList = ArrayList<QuotesList>()
+    private val menuList = ArrayList<QuotesList>()
 
     class MenuHolder(v: View) : RecyclerView.ViewHolder(v) {
-        val binding = MenuItemBinding.bind(v)
+        private val binding = MenuItemBinding.bind(v)
         val context = v.context
-        lateinit var btn: Button
+        private lateinit var btn: Button
         fun bind(menu: QuotesList) = with(binding) {
             menuHeader.text = menu.quotesTitle
             menuDescription.text = menu.quotesDescription
@@ -50,6 +51,7 @@ class MenuAdapter : RecyclerView.Adapter<MenuAdapter.MenuHolder>() {
         return menuList.size
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun addItem(q: QuotesList) {
         menuList.add(q)
         notifyDataSetChanged()

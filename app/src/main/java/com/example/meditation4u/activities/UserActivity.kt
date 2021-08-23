@@ -4,6 +4,7 @@ package com.example.meditation4u.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
@@ -36,36 +37,16 @@ class UserActivity : AppCompatActivity() {
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
         setContentView(picBinding.root)
 
-        launcher =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
-                if (result.resultCode == RESULT_OK) {
-                    val id = result.data?.getIntExtra(PICTURE, 0)
-                    val currentTime =
-                        SimpleDateFormat("HH:mm", Locale.US).format(Calendar.getInstance().time)
-                    if (id != null) {
-                        clearSharedPrefs()
-                        adapter.addItem(PicList(id, currentTime))
-                        savePictureData(adapter.picList)
-                    }
-                }
-                if (result.resultCode == RESULT_FIRST_USER) {
-                    val id = result.data?.getIntExtra(ITEM_CODE, ITEM_STAY)
-                    if (id == ITEM_DELETE) {
-                        val position = result.data?.getIntExtra(POSITION, ITEM_STAY)
-                        if (position != null) {
-                            clearSharedPrefs()
-                            adapter.deleteItem(position)
-                            savePictureData(adapter.picList)
-                        }
-
-                    }
-                }
-            }
-        adapter.addLauncher(launcher)
+        setAdapterLauncher()
 
         bindingInit()
 
         setProfile(user)
+
+        setListeners(user)
+    }
+
+    private fun setListeners(user: LoginResponse) {
         userExit.setOnClickListener {
             saveData(LoginResponse(EMPTY, user.email, EMPTY, EMPTY, EMPTY))
             savePictureData(arrayListOf())
@@ -86,6 +67,38 @@ class UserActivity : AppCompatActivity() {
         userHamburger.setOnClickListener {
             Toast.makeText(this, R.string.uselessBtn, Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun setAdapterLauncher() {
+        launcher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+                if (result.resultCode == RESULT_OK) {
+                    /* gets image and date to put in recyclerView */
+                    val id = result.data?.getIntExtra(PICTURE, 0)
+                    val currentTime =
+                        SimpleDateFormat("HH:mm", Locale.US).format(Calendar.getInstance().time)
+                    if (id != null) {
+                        clearSharedPrefs()
+                        adapter.addItem(PicList(id, currentTime))
+                        /* saves in shared prefs*/
+                        savePictureData(adapter.picList)
+                    }
+                }
+                if (result.resultCode == RESULT_FIRST_USER) {
+                    val id = result.data?.getIntExtra(ITEM_CODE, ITEM_STAY)
+                    if (id == ITEM_DELETE) {
+                        val position = result.data?.getIntExtra(POSITION, ITEM_STAY)
+                        if (position != null) {
+                            /* deletes from shared prefs */
+                            clearSharedPrefs()
+                            adapter.deleteItem(position)
+                            savePictureData(adapter.picList)
+                        }
+
+                    }
+                }
+            }
+        adapter.addLauncher(launcher)
     }
 
     private fun bindingInit() {

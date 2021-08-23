@@ -19,13 +19,13 @@ import com.example.meditation4u.constants.POSITION
 import com.example.meditation4u.databinding.PictureItemBinding
 import maes.tech.intentanim.CustomIntent
 
-
-class PictureAdapter() : RecyclerView.Adapter<PictureAdapter.PicHolder>() {
+@SuppressLint("NotifyDataSetChanged")
+class PictureAdapter : RecyclerView.Adapter<PictureAdapter.PicHolder>() {
     val picList = ArrayList<PicList>()
-    var launcher: ActivityResultLauncher<Intent>? = null
+    private var launcher: ActivityResultLauncher<Intent>? = null
 
     class PicHolder(v: View) : RecyclerView.ViewHolder(v) {
-        val binding = PictureItemBinding.bind(v)
+        private val binding = PictureItemBinding.bind(v)
         val context = v.context
 
         @SuppressLint("SetTextI18n")
@@ -77,6 +77,7 @@ class PictureAdapter() : RecyclerView.Adapter<PictureAdapter.PicHolder>() {
     override fun getItemCount(): Int {
         return picList.size
     }
+
 
     fun addItem(q: PicList) {
         picList.add(itemCount - 1, q)

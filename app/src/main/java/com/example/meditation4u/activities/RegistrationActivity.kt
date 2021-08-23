@@ -28,6 +28,12 @@ class RegistrationActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registration)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+
+        setListeners()
+
+    }
+
+    private fun setListeners() {
         toLoginBtn.setOnClickListener {
             intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)

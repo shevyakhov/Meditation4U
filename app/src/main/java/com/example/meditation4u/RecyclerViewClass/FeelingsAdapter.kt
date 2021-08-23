@@ -1,5 +1,6 @@
 package com.example.meditation4u.RecyclerViewClass
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
@@ -11,10 +12,10 @@ import com.example.meditation4u.UserApi.Feelings
 import com.example.meditation4u.databinding.FeelingItemBinding
 
 class FeelingsAdapter : RecyclerView.Adapter<FeelingsAdapter.FeelingsHolder>() {
-    val feelingList = ArrayList<Feelings>()
+    private val feelingList = ArrayList<Feelings>()
 
     class FeelingsHolder(v: View) : RecyclerView.ViewHolder(v) {
-        val binding = FeelingItemBinding.bind(v)
+        private val binding = FeelingItemBinding.bind(v)
         val context = v.context
         fun bind(feeling: Feelings) = with(binding) {
             var count = 0
@@ -50,6 +51,7 @@ class FeelingsAdapter : RecyclerView.Adapter<FeelingsAdapter.FeelingsHolder>() {
         return feelingList.size
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun addFeeling(f: Feelings) {
         feelingList.add(f)
         notifyDataSetChanged()
